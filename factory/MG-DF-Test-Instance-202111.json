@@ -1,0 +1,9 @@
+{
+	"name": "MG-DF-Test-Instance-202111",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6a64961e-a55e-4335-9858-d7e362a9d603",
+		"tenantId": "fb8dba08-0b2a-4de4-83d5-24e11037bf40"
+	}
+}
