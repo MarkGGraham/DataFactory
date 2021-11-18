@@ -9,10 +9,10 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"container": "json"
+				"type": "AzureBlobStorageLocation"
 			},
 			"columnDelimiter": "",
+			"rowDelimiter": "",
 			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
