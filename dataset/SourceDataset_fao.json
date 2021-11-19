@@ -9,7 +9,8 @@
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "FileServerLocation"
+				"type": "FileServerLocation",
+				"fileName": "*.json"
 			}
 		},
 		"schema": {
