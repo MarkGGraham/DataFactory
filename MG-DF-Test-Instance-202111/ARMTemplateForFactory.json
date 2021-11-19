@@ -140,7 +140,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "*.json",
 						"container": "json"
 					}
 				},
@@ -164,7 +163,10 @@
 				"typeProperties": {
 					"location": {
 						"type": "FileServerLocation",
-						"fileName": "*.json"
+						"fileName": {
+							"value": "*.*",
+							"type": "Expression"
+						}
 					}
 				},
 				"schema": {
