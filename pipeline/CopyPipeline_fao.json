@@ -19,7 +19,7 @@
 						"type": "JsonSource",
 						"storeSettings": {
 							"type": "FileServerReadSettings",
-							"fileListPath": "1273724.json",
+							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
