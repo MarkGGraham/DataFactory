@@ -1,0 +1,1070 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "MG-DF-Test-Instance-202111"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"FileServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer1'"
+		},
+		"FileServer2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer2'"
+		},
+		"LocalFileCopy_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LocalFileCopy'"
+		},
+		"SqlServer1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\DESKTOP-HRVRA1S\\cricsheet\\"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Mark"
+		},
+		"FileServer2_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\DESKTOP-HRVRA1S\\H$\\sports\\cricket\\cricsheet"
+		},
+		"FileServer2_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Mark"
+		},
+		"LocalFileCopy_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "H:\\sports\\cricket\\cricsheet"
+		},
+		"LocalFileCopy_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Mark"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_fao')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data2",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings",
+									"filePattern": "setOfObjects"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_fao",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Json1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_fao')]",
+				"[concat(variables('factoryId'), '/datasets/Json1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_fao')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileServer2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "*.json"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"meta": {
+							"type": "object",
+							"properties": {
+								"data_version": {
+									"type": "string"
+								},
+								"created": {
+									"type": "string"
+								},
+								"revision": {
+									"type": "integer"
+								}
+							}
+						},
+						"info": {
+							"type": "object",
+							"properties": {
+								"balls_per_over": {
+									"type": "integer"
+								},
+								"city": {
+									"type": "string"
+								},
+								"dates": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"event": {
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string"
+										},
+										"match_number": {
+											"type": "integer"
+										},
+										"group": {
+											"type": "string"
+										}
+									}
+								},
+								"gender": {
+									"type": "string"
+								},
+								"match_type": {
+									"type": "string"
+								},
+								"match_type_number": {
+									"type": "integer"
+								},
+								"officials": {
+									"type": "object",
+									"properties": {
+										"match_referees": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"reserve_umpires": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"tv_umpires": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"umpires": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"outcome": {
+									"type": "object",
+									"properties": {
+										"winner": {
+											"type": "string"
+										},
+										"by": {
+											"type": "object",
+											"properties": {
+												"wickets": {
+													"type": "integer"
+												},
+												"runs": {
+													"type": "integer"
+												}
+											}
+										}
+									}
+								},
+								"overs": {
+									"type": "integer"
+								},
+								"player_of_match": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"players": {
+									"type": "object",
+									"properties": {
+										"South Africa": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Australia": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"West Indies": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"England": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Bangladesh": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Sri Lanka": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"India": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Pakistan": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Afghanistan": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Scotland": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"New Zealand": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"Namibia": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										}
+									}
+								},
+								"registry": {
+									"type": "object",
+									"properties": {
+										"people": {
+											"type": "object",
+											"properties": {
+												"A Nortje": {
+													"type": "string"
+												},
+												"A Zampa": {
+													"type": "string"
+												},
+												"AJ Finch": {
+													"type": "string"
+												},
+												"AK Markram": {
+													"type": "string"
+												},
+												"Ahsan Raza": {
+													"type": "string"
+												},
+												"D Pretorius": {
+													"type": "string"
+												},
+												"DA Miller": {
+													"type": "string"
+												},
+												"DA Warner": {
+													"type": "string"
+												},
+												"GJ Maxwell": {
+													"type": "string"
+												},
+												"H Klaasen": {
+													"type": "string"
+												},
+												"HE van der Dussen": {
+													"type": "string"
+												},
+												"J Srinath": {
+													"type": "string"
+												},
+												"JR Hazlewood": {
+													"type": "string"
+												},
+												"K Rabada": {
+													"type": "string"
+												},
+												"KA Maharaj": {
+													"type": "string"
+												},
+												"L Rusere": {
+													"type": "string"
+												},
+												"MA Gough": {
+													"type": "string"
+												},
+												"MA Starc": {
+													"type": "string"
+												},
+												"MP Stoinis": {
+													"type": "string"
+												},
+												"MR Marsh": {
+													"type": "string"
+												},
+												"MS Wade": {
+													"type": "string"
+												},
+												"Nitin Menon": {
+													"type": "string"
+												},
+												"PJ Cummins": {
+													"type": "string"
+												},
+												"Q de Kock": {
+													"type": "string"
+												},
+												"SPD Smith": {
+													"type": "string"
+												},
+												"T Bavuma": {
+													"type": "string"
+												},
+												"T Shamsi": {
+													"type": "string"
+												},
+												"AD Russell": {
+													"type": "string"
+												},
+												"AJ Hosein": {
+													"type": "string"
+												},
+												"AU Rashid": {
+													"type": "string"
+												},
+												"Aleem Dar": {
+													"type": "string"
+												},
+												"CH Gayle": {
+													"type": "string"
+												},
+												"CJ Jordan": {
+													"type": "string"
+												},
+												"CM Brown": {
+													"type": "string"
+												},
+												"CR Woakes": {
+													"type": "string"
+												},
+												"DC Boon": {
+													"type": "string"
+												},
+												"DJ Bravo": {
+													"type": "string"
+												},
+												"DJ Malan": {
+													"type": "string"
+												},
+												"E Lewis": {
+													"type": "string"
+												},
+												"EJG Morgan": {
+													"type": "string"
+												},
+												"JC Buttler": {
+													"type": "string"
+												},
+												"JJ Roy": {
+													"type": "string"
+												},
+												"JM Bairstow": {
+													"type": "string"
+												},
+												"KA Pollard": {
+													"type": "string"
+												},
+												"LMP Simmons": {
+													"type": "string"
+												},
+												"LS Livingstone": {
+													"type": "string"
+												},
+												"M Erasmus": {
+													"type": "string"
+												},
+												"MM Ali": {
+													"type": "string"
+												},
+												"N Pooran": {
+													"type": "string"
+												},
+												"OC McCoy": {
+													"type": "string"
+												},
+												"P Wilson": {
+													"type": "string"
+												},
+												"R Rampaul": {
+													"type": "string"
+												},
+												"SO Hetmyer": {
+													"type": "string"
+												},
+												"TS Mills": {
+													"type": "string"
+												},
+												"AT Holdstock": {
+													"type": "string"
+												},
+												"Afif Hossain": {
+													"type": "string"
+												},
+												"B Fernando": {
+													"type": "string"
+												},
+												"C Karunaratne": {
+													"type": "string"
+												},
+												"CBRLS Kumara": {
+													"type": "string"
+												},
+												"JS Wilson": {
+													"type": "string"
+												},
+												"KIC Asalanka": {
+													"type": "string"
+												},
+												"Liton Das": {
+													"type": "string"
+												},
+												"MD Shanaka": {
+													"type": "string"
+												},
+												"MDKJ Perera": {
+													"type": "string"
+												},
+												"Mahedi Hasan": {
+													"type": "string"
+												},
+												"Mahmudullah": {
+													"type": "string"
+												},
+												"Mohammad Naim": {
+													"type": "string"
+												},
+												"Mohammad Saifuddin": {
+													"type": "string"
+												},
+												"Mushfiqur Rahim": {
+													"type": "string"
+												},
+												"Mustafizur Rahman": {
+													"type": "string"
+												},
+												"Nasum Ahmed": {
+													"type": "string"
+												},
+												"Nurul Hasan": {
+													"type": "string"
+												},
+												"P Nissanka": {
+													"type": "string"
+												},
+												"PBB Rajapaksa": {
+													"type": "string"
+												},
+												"PVD Chameera": {
+													"type": "string"
+												},
+												"PWH de Silva": {
+													"type": "string"
+												},
+												"RJ Tucker": {
+													"type": "string"
+												},
+												"Shakib Al Hasan": {
+													"type": "string"
+												},
+												"WIA Fernando": {
+													"type": "string"
+												},
+												"Asif Ali": {
+													"type": "string"
+												},
+												"B Kumar": {
+													"type": "string"
+												},
+												"Babar Azam": {
+													"type": "string"
+												},
+												"CB Gaffaney": {
+													"type": "string"
+												},
+												"CV Varun": {
+													"type": "string"
+												},
+												"Fakhar Zaman": {
+													"type": "string"
+												},
+												"HH Pandya": {
+													"type": "string"
+												},
+												"Haris Rauf": {
+													"type": "string"
+												},
+												"Hasan Ali": {
+													"type": "string"
+												},
+												"Imad Wasim": {
+													"type": "string"
+												},
+												"JJ Bumrah": {
+													"type": "string"
+												},
+												"KL Rahul": {
+													"type": "string"
+												},
+												"Mohammad Hafeez": {
+													"type": "string"
+												},
+												"Mohammad Nawaz": {
+													"type": "string"
+												},
+												"Mohammad Rizwan": {
+													"type": "string"
+												},
+												"Mohammed Shami": {
+													"type": "string"
+												},
+												"PR Reiffel": {
+													"type": "string"
+												},
+												"RA Jadeja": {
+													"type": "string"
+												},
+												"RG Sharma": {
+													"type": "string"
+												},
+												"RK Illingworth": {
+													"type": "string"
+												},
+												"RR Pant": {
+													"type": "string"
+												},
+												"SA Yadav": {
+													"type": "string"
+												},
+												"Shadab Khan": {
+													"type": "string"
+												},
+												"Shaheen Shah Afridi": {
+													"type": "string"
+												},
+												"Shoaib Malik": {
+													"type": "string"
+												},
+												"V Kohli": {
+													"type": "string"
+												},
+												"Asghar Stanikzai": {
+													"type": "string"
+												},
+												"BTJ Wheal": {
+													"type": "string"
+												},
+												"CN Greaves": {
+													"type": "string"
+												},
+												"CS MacLeod": {
+													"type": "string"
+												},
+												"Gulbadin Naib": {
+													"type": "string"
+												},
+												"HDPK Dharmasena": {
+													"type": "string"
+												},
+												"HG Munsey": {
+													"type": "string"
+												},
+												"Hazratullah": {
+													"type": "string"
+												},
+												"JH Davey": {
+													"type": "string"
+												},
+												"JJ Crowe": {
+													"type": "string"
+												},
+												"KJ Coetzer": {
+													"type": "string"
+												},
+												"Karim Janat": {
+													"type": "string"
+												},
+												"MA Leask": {
+													"type": "string"
+												},
+												"MH Cross": {
+													"type": "string"
+												},
+												"MRJ Watt": {
+													"type": "string"
+												},
+												"Mohammad Nabi": {
+													"type": "string"
+												},
+												"Mohammad Shahzad": {
+													"type": "string"
+												},
+												"Mujeeb Ur Rahman": {
+													"type": "string"
+												},
+												"Najibullah Zadran": {
+													"type": "string"
+												},
+												"Naveen-ul-Haq": {
+													"type": "string"
+												},
+												"RA Kettleborough": {
+													"type": "string"
+												},
+												"RD Berrington": {
+													"type": "string"
+												},
+												"Rahmanullah Gurbaz": {
+													"type": "string"
+												},
+												"Rashid Khan": {
+													"type": "string"
+												},
+												"SM Sharif": {
+													"type": "string"
+												},
+												"HR Walsh": {
+													"type": "string"
+												},
+												"RR Hendricks": {
+													"type": "string"
+												},
+												"DJ Mitchell": {
+													"type": "string"
+												},
+												"DP Conway": {
+													"type": "string"
+												},
+												"GD Phillips": {
+													"type": "string"
+												},
+												"IS Sodhi": {
+													"type": "string"
+												},
+												"JDS Neesham": {
+													"type": "string"
+												},
+												"KS Williamson": {
+													"type": "string"
+												},
+												"MJ Guptill": {
+													"type": "string"
+												},
+												"MJ Santner": {
+													"type": "string"
+												},
+												"RS Madugalle": {
+													"type": "string"
+												},
+												"TA Boult": {
+													"type": "string"
+												},
+												"TG Southee": {
+													"type": "string"
+												},
+												"TL Seifert": {
+													"type": "string"
+												},
+												"Shoriful Islam": {
+													"type": "string"
+												},
+												"BM Scholtz": {
+													"type": "string"
+												},
+												"CD Wallace": {
+													"type": "string"
+												},
+												"CG Williams": {
+													"type": "string"
+												},
+												"D Wiese": {
+													"type": "string"
+												},
+												"HN Ya France": {
+													"type": "string"
+												},
+												"JJ Smit": {
+													"type": "string"
+												},
+												"JN Frylinck": {
+													"type": "string"
+												},
+												"JN Loftie-Eaton": {
+													"type": "string"
+												},
+												"M van Lingen": {
+													"type": "string"
+												},
+												"MG Erasmus": {
+													"type": "string"
+												},
+												"R Trumpelmann": {
+													"type": "string"
+												},
+												"ZE Green": {
+													"type": "string"
+												},
+												"M Theekshana": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								},
+								"season": {
+									"type": "string"
+								},
+								"team_type": {
+									"type": "string"
+								},
+								"teams": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								},
+								"toss": {
+									"type": "object",
+									"properties": {
+										"decision": {
+											"type": "string"
+										},
+										"winner": {
+											"type": "string"
+										}
+									}
+								},
+								"venue": {
+									"type": "string"
+								}
+							}
+						},
+						"innings": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"team": {
+										"type": "string"
+									},
+									"overs": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"over": {
+													"type": "integer"
+												},
+												"deliveries": {
+													"type": "array",
+													"items": {
+														"type": "object",
+														"properties": {
+															"batter": {
+																"type": "string"
+															},
+															"bowler": {
+																"type": "string"
+															},
+															"non_striker": {
+																"type": "string"
+															},
+															"runs": {
+																"type": "object",
+																"properties": {
+																	"batter": {
+																		"type": "integer"
+																	},
+																	"extras": {
+																		"type": "integer"
+																	},
+																	"total": {
+																		"type": "integer"
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									},
+									"powerplays": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"from": {
+													"type": "number"
+												},
+												"to": {
+													"type": "number"
+												},
+												"type": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FileServer2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer1_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer1_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileServer2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer2_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer2_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer2_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LocalFileCopy')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('LocalFileCopy_properties_typeProperties_host')]",
+					"userId": "[parameters('LocalFileCopy_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LocalFileCopy_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SqlServer1_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime1",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime2')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "West Europe",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 10,
+							"cleanup": false
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "*.json",
+						"container": "json"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		}
+	]
+}
