@@ -19,6 +19,7 @@
 						"type": "JsonSource",
 						"additionalColumns": [
 							{
+								"name": "filename",
 								"value": "$$FILEPATH"
 							}
 						],
@@ -41,15 +42,6 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
-							{
-								"source": {
-									"path": "$['info']['dates'][0]"
-								},
-								"sink": {
-									"name": "match_date",
-									"type": "DateTime"
-								}
-							},
 							{
 								"source": {
 									"path": "$['info']['event']['match_number']"
@@ -106,7 +98,16 @@
 							},
 							{
 								"source": {
-									"path": "$['$[\\'info\\'][\\'player_of_match\\']']"
+									"path": "$['info']['dates'][0]"
+								},
+								"sink": {
+									"name": "match_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"path": "$['$[\\'info\\'][\\'player_of_match\\'][0]']"
 								},
 								"sink": {
 									"name": "player_of_match",
@@ -114,7 +115,7 @@
 								}
 							}
 						],
-						"collectionReference": "$['info']['player_of_match']"
+						"collectionReference": ""
 					}
 				},
 				"inputs": [
