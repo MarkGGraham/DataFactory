@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "1273724.json",
 				"container": "cricsheetinput"
 			}
 		},
