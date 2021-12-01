@@ -20,6 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*.json",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -876,15 +877,6 @@
 									"name": "venue",
 									"type": "String"
 								}
-							},
-							{
-								"source": {
-									"path": "$['info']['dates'][0]"
-								},
-								"sink": {
-									"name": "match_date",
-									"type": "DateTime"
-								}
 							}
 						],
 						"collectionReference": ""
@@ -928,6 +920,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*.json",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
