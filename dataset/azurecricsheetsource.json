@@ -1,5 +1,5 @@
 {
-	"name": "Json3",
+	"name": "azurecricsheetsource",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
