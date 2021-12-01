@@ -1,0 +1,50 @@
+{
+	"name": "matches",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "venue",
+				"type": "varchar"
+			},
+			{
+				"name": "event_name",
+				"type": "varchar"
+			},
+			{
+				"name": "match_number",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "match_date",
+				"type": "date"
+			},
+			{
+				"name": "winner",
+				"type": "varchar"
+			},
+			{
+				"name": "toss_winner",
+				"type": "varchar"
+			},
+			{
+				"name": "toss_decision",
+				"type": "varchar"
+			},
+			{
+				"name": "player_of_match",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "matches"
+		}
+	}
+}

@@ -1,0 +1,405 @@
+{
+	"name": "cricsheet to SQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "cricsheet to SQL",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['meta']['data_version']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['created']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['revision']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['balls_per_over']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['city']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['event']['name']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['event']['match_number']"
+								},
+								"sink": {
+									"name": "match_number",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['event']['group']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['gender']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['match_type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['match_type_number']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['outcome']['winner']"
+								},
+								"sink": {
+									"name": "winner",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['outcome']['by']['wickets']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['overs']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['A Nortje']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['A Zampa']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['AJ Finch']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['AK Markram']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['Ahsan Raza']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['D Pretorius']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['DA Miller']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['DA Warner']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['GJ Maxwell']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['H Klaasen']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['HE van der Dussen']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['J Srinath']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['JR Hazlewood']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['K Rabada']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['KA Maharaj']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['L Rusere']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['MA Gough']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['MA Starc']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['MP Stoinis']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['MR Marsh']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['MS Wade']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['Nitin Menon']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['PJ Cummins']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['Q de Kock']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['SPD Smith']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['T Bavuma']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['registry']['people']['T Shamsi']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['season']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['team_type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['toss']['decision']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['toss']['winner']"
+								},
+								"sink": {
+									"name": "winner",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['venue']"
+								},
+								"sink": {
+									"name": "venue",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['dates'][0]"
+								},
+								"sink": {
+									"name": "match_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['match_referees'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['reserve_umpires'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['tv_umpires'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['umpires'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['player_of_match'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['South Africa'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Australia'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['teams'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['team']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['over']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['batter']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['bowler']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['non_striker']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['runs']['batter']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['runs']['extras']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['runs']['total']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['powerplays'][0]['from']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['powerplays'][0]['to']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['powerplays'][0]['type']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "cricsheetJSON",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "matches",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
