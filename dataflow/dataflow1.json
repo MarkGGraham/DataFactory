@@ -6,27 +6,19 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Json1",
+						"referenceName": "azurecricsheetsource",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "SqlServerTable1",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "Flatten1"
 				}
 			],
-			"script": "source(output(\n\t\tmeta as (data_version as string, created as string, revision as integer),\n\t\tinfo as (balls_per_over as integer, city as string, dates as string[], event as (name as string, match_number as integer, group as string), gender as string, match_type as string, match_type_number as integer, officials as (match_referees as string[], reserve_umpires as string[], tv_umpires as string[], umpires as string[]), outcome as (winner as string, by as (wickets as integer)), overs as integer, player_of_match as string[], players as ({South Africa} as string[], Australia as string[]), registry as (people as ({A Nortje} as string, {A Zampa} as string, {AJ Finch} as string, {AK Markram} as string, {Ahsan Raza} as string, {D Pretorius} as string, {DA Miller} as string, {DA Warner} as string, {GJ Maxwell} as string, {H Klaasen} as string, {HE van der Dussen} as string, {J Srinath} as string, {JR Hazlewood} as string, {K Rabada} as string, {KA Maharaj} as string, {L Rusere} as string, {MA Gough} as string, {MA Starc} as string, {MP Stoinis} as string, {MR Marsh} as string, {MS Wade} as string, {Nitin Menon} as string, {PJ Cummins} as string, {Q de Kock} as string, {SPD Smith} as string, {T Bavuma} as string, {T Shamsi} as string)), season as string, team_type as string, teams as string[], toss as (decision as string, winner as string), venue as string),\n\t\tinnings as (team as string, overs as (over as integer, deliveries as (batter as string, bowler as string, non_striker as string, runs as (batter as integer, extras as integer, total as integer))[])[], powerplays as (from as double, to as double, type as string)[])[]\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 10,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'documentPerLine') ~> source1\nsource1 foldDown(unroll(),\n\tmapColumn(\n\t\tmeta,\n\t\tinfo,\n\t\tinnings\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\tdocumentForm: 'arrayOfDocuments') ~> source1\nsource1 foldDown(unroll(),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1"
 		}
 	}
 }

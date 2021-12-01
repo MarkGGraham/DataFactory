@@ -15,17 +15,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "JsonSource",
-						"storeSettings": {
-							"type": "FileServerReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "JsonReadSettings"
-						}
-					},
 					"sink": {
 						"type": "JsonSink",
 						"storeSettings": {
@@ -37,15 +26,9 @@
 					},
 					"enableStaging": false
 				},
-				"inputs": [
-					{
-						"referenceName": "Json2",
-						"type": "DatasetReference"
-					}
-				],
 				"outputs": [
 					{
-						"referenceName": "Json3",
+						"referenceName": "azurecricsheetsource",
 						"type": "DatasetReference"
 					}
 				]
