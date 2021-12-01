@@ -1,0 +1,34 @@
+{
+	"name": "innings",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "event_name",
+				"type": "varchar"
+			},
+			{
+				"name": "match_number",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "filename",
+				"type": "varchar"
+			},
+			{
+				"name": "innings",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "innings"
+		}
+	}
+}
