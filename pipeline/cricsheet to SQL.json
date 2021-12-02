@@ -107,7 +107,7 @@
 							},
 							{
 								"source": {
-									"path": "$['$[\\'info\\'][\\'player_of_match\\'][0]']"
+									"path": "$['info']['player_of_match']"
 								},
 								"sink": {
 									"name": "player_of_match",
@@ -115,7 +115,8 @@
 								}
 							}
 						],
-						"collectionReference": ""
+						"collectionReference": "$['info']['player_of_match']",
+						"mapComplexValuesToString": true
 					}
 				},
 				"inputs": [

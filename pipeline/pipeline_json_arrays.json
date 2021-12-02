@@ -17,6 +17,12 @@
 				"typeProperties": {
 					"source": {
 						"type": "JsonSource",
+						"additionalColumns": [
+							{
+								"name": "filename",
+								"value": "$$FILEPATH"
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
@@ -28,7 +34,9 @@
 						}
 					},
 					"sink": {
-						"type": "AzureSqlSink"
+						"type": "AzureSqlSink",
+						"preCopyScript": "delete from matches",
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -36,11 +44,37 @@
 						"mappings": [
 							{
 								"source": {
+									"path": "$['meta']['data_version']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['created']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meta']['revision']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['balls_per_over']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['city']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['dates'][0]"
+								}
+							},
+							{
+								"source": {
 									"path": "$['info']['event']['name']"
-								},
-								"sink": {
-									"name": "event_name",
-									"type": "String"
 								}
 							},
 							{
@@ -54,11 +88,131 @@
 							},
 							{
 								"source": {
+									"path": "$['info']['event']['group']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['gender']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['match_type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['match_type_number']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['match_referees'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['reserve_umpires'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['tv_umpires'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['officials']['umpires'][0]"
+								}
+							},
+							{
+								"source": {
 									"path": "$['info']['outcome']['winner']"
 								},
 								"sink": {
 									"name": "winner",
 									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['outcome']['by']['wickets']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['outcome']['by']['runs']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['overs']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['player_of_match'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['South Africa'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Australia'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['West Indies'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['England'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Bangladesh'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Sri Lanka'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['India'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Pakistan'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Afghanistan'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Scotland'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['New Zealand'][0]"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['players']['Namibia'][0]"
 								}
 							},
 							{
@@ -853,11 +1007,22 @@
 							},
 							{
 								"source": {
+									"path": "$['info']['season']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['team_type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['info']['teams'][0]"
+								}
+							},
+							{
+								"source": {
 									"path": "$['info']['toss']['decision']"
-								},
-								"sink": {
-									"name": "toss_decision",
-									"type": "String"
 								}
 							},
 							{
@@ -865,7 +1030,7 @@
 									"path": "$['info']['toss']['winner']"
 								},
 								"sink": {
-									"name": "toss_winner",
+									"name": "winner",
 									"type": "String"
 								}
 							},
@@ -875,6 +1040,70 @@
 								},
 								"sink": {
 									"name": "venue",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['team']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['over']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['batter']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['bowler']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['non_striker']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['runs']['batter']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['runs']['extras']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['overs'][0]['deliveries'][0]['runs']['total']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['powerplays'][0]['from']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['powerplays'][0]['to']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['innings'][0]['powerplays'][0]['type']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['filename']"
+								},
+								"sink": {
+									"name": "filename",
 									"type": "String"
 								}
 							}
@@ -897,6 +1126,7 @@
 			},
 			{
 				"name": "level2 innings",
+				"description": "delete from innings",
 				"type": "Copy",
 				"dependsOn": [
 					{
