@@ -1,0 +1,37 @@
+{
+	"name": "s_generic_2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "string1",
+				"type": "varchar"
+			},
+			{
+				"name": "string2",
+				"type": "varchar"
+			},
+			{
+				"name": "string3",
+				"type": "varchar"
+			},
+			{
+				"name": "string4",
+				"type": "varchar"
+			},
+			{
+				"name": "string5",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "s_generic_2"
+		}
+	}
+}
