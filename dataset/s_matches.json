@@ -1,5 +1,5 @@
 {
-	"name": "matches",
+	"name": "s_matches",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
@@ -44,7 +44,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "matches"
+			"table": "s_matches"
 		}
 	}
 }
