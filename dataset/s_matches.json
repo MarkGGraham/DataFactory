@@ -68,6 +68,10 @@
 			{
 				"name": "result",
 				"type": "varchar"
+			},
+			{
+				"name": "season",
+				"type": "varchar"
 			}
 		],
 		"typeProperties": {
