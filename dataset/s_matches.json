@@ -40,6 +40,34 @@
 			{
 				"name": "player_of_match",
 				"type": "varchar"
+			},
+			{
+				"name": "filename",
+				"type": "varchar"
+			},
+			{
+				"name": "stage",
+				"type": "varchar"
+			},
+			{
+				"name": "match_group",
+				"type": "varchar"
+			},
+			{
+				"name": "winning_margin",
+				"type": "varchar"
+			},
+			{
+				"name": "eliminator",
+				"type": "varchar"
+			},
+			{
+				"name": "method",
+				"type": "varchar"
+			},
+			{
+				"name": "result",
+				"type": "varchar"
 			}
 		],
 		"typeProperties": {
