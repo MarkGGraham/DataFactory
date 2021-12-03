@@ -127,7 +127,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "matches",
+						"referenceName": "s_matches",
 						"type": "DatasetReference"
 					}
 				]
