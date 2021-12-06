@@ -1,0 +1,28 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CustomerSource2",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CustomerSource",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"script": "source(output(\n\t\tCustomerID as string,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'filename') ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCustomerID as integer,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+		}
+	}
+}
