@@ -20,6 +20,19 @@
 		},
 		"schema": [
 			{
+				"name": "Date",
+				"type": "String"
+			},
+			{
+				"name": "company",
+				"type": "String"
+			},
+			{
+				"name": "employee",
+				"type": "String"
+			},
+			{
+				"name": "Salaries",
 				"type": "String"
 			}
 		]
