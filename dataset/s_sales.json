@@ -1,0 +1,33 @@
+{
+	"name": "s_sales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Date",
+				"type": "varchar"
+			},
+			{
+				"name": "company",
+				"type": "varchar"
+			},
+			{
+				"name": "employee",
+				"type": "varchar"
+			},
+			{
+				"name": "Salaries",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "s_sales"
+		}
+	}
+}
