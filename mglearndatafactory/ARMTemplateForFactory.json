@@ -49,7 +49,8 @@
 									"sinksteams": {},
 									"sinkmatches": {},
 									"sinksreferees": {},
-									"sink1": {}
+									"sink1": {},
+									"sink2": {}
 								}
 							},
 							"staging": {},
@@ -272,6 +273,100 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/s_customer')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "customer",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/customer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/s_sales')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "s_sales",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "s_sales",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/s_sales')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -302,6 +397,243 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CSR')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "CustomerSource.csv",
+						"container": "csv"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "String"
+					},
+					{
+						"name": "Title",
+						"type": "String"
+					},
+					{
+						"name": "FirstName",
+						"type": "String"
+					},
+					{
+						"name": "MiddleName",
+						"type": "String"
+					},
+					{
+						"name": "LastName",
+						"type": "String"
+					},
+					{
+						"name": "Suffix",
+						"type": "String"
+					},
+					{
+						"name": "CompanyName",
+						"type": "String"
+					},
+					{
+						"name": "SalesPerson",
+						"type": "String"
+					},
+					{
+						"name": "EmailAddress",
+						"type": "String"
+					},
+					{
+						"name": "Phone",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomerSource')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Title",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MiddleName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Suffix",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CompanyName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesPerson",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EmailAddress",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Phone",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "CustomerSource"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "cricsheetinput"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DimCustomer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Title",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MiddleName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Suffix",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CompanyName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesPerson",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EmailAddress",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InsertedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "HashKey",
+						"type": "char"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "DimCustomer"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Filelist')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -322,6 +654,51 @@
 				},
 				"schema": [
 					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sales')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "sales.csv",
+						"container": "csv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Date",
+						"type": "String"
+					},
+					{
+						"name": "company",
+						"type": "String"
+					},
+					{
+						"name": "employee",
+						"type": "String"
+					},
+					{
+						"name": "Salaries",
 						"type": "String"
 					}
 				]
@@ -765,6 +1142,90 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/s_generic')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "string1",
+						"type": "varchar"
+					},
+					{
+						"name": "string2",
+						"type": "varchar"
+					},
+					{
+						"name": "string3",
+						"type": "varchar"
+					},
+					{
+						"name": "string4",
+						"type": "varchar"
+					},
+					{
+						"name": "string5",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "s_generic"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/s_generic_2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "string1",
+						"type": "varchar"
+					},
+					{
+						"name": "string2",
+						"type": "varchar"
+					},
+					{
+						"name": "string3",
+						"type": "varchar"
+					},
+					{
+						"name": "string4",
+						"type": "varchar"
+					},
+					{
+						"name": "string5",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "s_generic_2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/s_matches')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -845,6 +1306,74 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "s_matches"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/s_referees')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "filename",
+						"type": "varchar"
+					},
+					{
+						"name": "referee",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "s_referees"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/s_sales')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Date",
+						"type": "varchar"
+					},
+					{
+						"name": "company",
+						"type": "varchar"
+					},
+					{
+						"name": "employee",
+						"type": "varchar"
+					},
+					{
+						"name": "Salaries",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "s_sales"
 				}
 			},
 			"dependsOn": [
@@ -938,6 +1467,63 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/UpdateCustomerDimension')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CustomerSource",
+								"type": "DatasetReference"
+							},
+							"name": "SourceDB"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimCustomer",
+								"type": "DatasetReference"
+							},
+							"name": "DimCustomer1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DimCustomer",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CreateCustomerHash"
+						},
+						{
+							"name": "Exists"
+						},
+						{
+							"name": "LookupCustomerID"
+						},
+						{
+							"name": "SetDates"
+						},
+						{
+							"name": "AllowUpserts"
+						}
+					],
+					"script": "source(output(\n\t\tCustomerID as integer,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SourceDB\nsource(output(\n\t\tCustomerID as integer,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string,\n\t\tInsertedDate as timestamp,\n\t\tModifiedDate as timestamp,\n\t\tHashKey as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> DimCustomer1\nSourceDB derive(HashKey = sha2(256, iifNull(Title,'') +FirstName +iifNull(MiddleName,'') +LastName +iifNull(Suffix,'') +iifNull(CompanyName,'') +iifNull(SalesPerson,'') +iifNull(EmailAddress,'') +iifNull(Phone,''))) ~> CreateCustomerHash\nCreateCustomerHash, DimCustomer1 exists(CreateCustomerHash@HashKey == DimCustomer1@HashKey,\n\tnegate:true,\n\tbroadcast: 'auto')~> Exists\nExists, DimCustomer1 lookup(SourceDB@CustomerID == DimCustomer1@CustomerID,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> LookupCustomerID\nLookupCustomerID derive(InsertedDate = iif(isNull(InsertedDate), currentTimestamp(), InsertedDate),\n\t\tModifiedDate = currentTimestamp()) ~> SetDates\nSetDates alterRow(upsertIf(true())) ~> AllowUpserts\nAllowUpserts sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCustomerID as integer,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string,\n\t\tInsertedDate as timestamp,\n\t\tModifiedDate as timestamp,\n\t\tHashKey as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:false,\n\tupsertable:true,\n\tkeys:['CustomerID'],\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID = SourceDB@CustomerID,\n\t\tTitle = SourceDB@Title,\n\t\tFirstName = SourceDB@FirstName,\n\t\tMiddleName = SourceDB@MiddleName,\n\t\tLastName = SourceDB@LastName,\n\t\tSuffix = SourceDB@Suffix,\n\t\tCompanyName = SourceDB@CompanyName,\n\t\tSalesPerson = DimCustomer1@SalesPerson,\n\t\tEmailAddress = SourceDB@EmailAddress,\n\t\tPhone = SourceDB@Phone,\n\t\tInsertedDate,\n\t\tModifiedDate,\n\t\tHashKey = CreateCustomerHash@HashKey\n\t)) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CustomerSource')]",
+				"[concat(variables('factoryId'), '/datasets/DimCustomer')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/cricsheet_to_staging')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -988,6 +1574,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "s_generic_2",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
 						}
 					],
 					"transformations": [
@@ -1001,10 +1594,13 @@
 							"name": "flattenreferees"
 						},
 						{
-							"name": "Flatten1"
+							"name": "flattenSA"
+						},
+						{
+							"name": "Flattendynamic"
 						}
 					],
-					"script": "source(output(\n\t\tmeta as (data_version as string, created as string, revision as integer),\n\t\tinfo as (balls_per_over as integer, city as string, dates as string[], event as (name as string, match_number as integer, group as string), gender as string, match_type as string, match_type_number as integer, officials as (match_referees as string[], reserve_umpires as string[], tv_umpires as string[], umpires as string[]), outcome as (winner as string, by as (wickets as integer)), overs as integer, player_of_match as string[], players as ({South Africa} as string[], Australia as string[]), registry as (people as ({A Nortje} as string, {A Zampa} as string, {AJ Finch} as string, {AK Markram} as string, {Ahsan Raza} as string, {D Pretorius} as string, {DA Miller} as string, {DA Warner} as string, {GJ Maxwell} as string, {H Klaasen} as string, {HE van der Dussen} as string, {J Srinath} as string, {JR Hazlewood} as string, {K Rabada} as string, {KA Maharaj} as string, {L Rusere} as string, {MA Gough} as string, {MA Starc} as string, {MP Stoinis} as string, {MR Marsh} as string, {MS Wade} as string, {Nitin Menon} as string, {PJ Cummins} as string, {Q de Kock} as string, {SPD Smith} as string, {T Bavuma} as string, {T Shamsi} as string)), season as string, team_type as string, teams as string[], toss as (decision as string, winner as string), venue as string),\n\t\tinnings as (team as string, overs as (over as integer, deliveries as (batter as string, bowler as string, non_striker as string, runs as (batter as integer, extras as integer, total as integer))[])[], powerplays as (from as double, to as double, type as string)[])[]\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'filename',\n\tdocumentForm: 'arrayOfDocuments',\n\tpartitionBy('hash', 1)) ~> cricsheet\ncricsheet foldDown(unroll(info.dates),\n\tmapColumn(\n\t\tdates = info.dates,\n\t\tfilename\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattendates\ncricsheet foldDown(unroll(info.teams),\n\tmapColumn(\n\t\tteam = info.teams,\n\t\tfilename\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattenteams\ncricsheet foldDown(unroll(info.officials.match_referees),\n\tmapColumn(\n\t\tfilename,\n\t\tmatch_referees = info.officials.match_referees\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattenreferees\ncricsheet foldDown(unroll(info.players.{South Africa}),\n\tmapColumn(\n\t\tplayer = info.players.{South Africa},\n\t\tfilename\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nflattendates sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tfilename as string,\n\t\tmatch_date as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_dates'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tfilename,\n\t\tmatch_date = dates\n\t)) ~> sinksdates\nflattenteams sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tfilename as string,\n\t\tteam as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_teams'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tfilename,\n\t\tteam\n\t)) ~> sinksteams\ncricsheet sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tinput(\n\t\tvenue as string,\n\t\tevent_name as string,\n\t\tmatch_number as integer,\n\t\tmatch_date as date,\n\t\twinner as string,\n\t\ttoss_winner as string,\n\t\ttoss_decision as string,\n\t\tplayer_of_match as string,\n\t\tfilename as string,\n\t\tstage as string,\n\t\tmatch_group as string,\n\t\twinning_margin as string,\n\t\teliminator as string,\n\t\tmethod as string,\n\t\tresult as string,\n\t\tseason as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_matches'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tvenue = info.venue,\n\t\tevent_name = info.event.name,\n\t\tmatch_number = info.event.match_number,\n\t\twinner = info.outcome.winner,\n\t\ttoss_winner = info.toss.winner,\n\t\ttoss_decision = info.toss.decision,\n\t\tplayer_of_match = info.player_of_match,\n\t\tmatch_group = info.event.group,\n\t\tfilename,\n\t\tseason = info.season\n\t)) ~> sinkmatches\nflattenreferees sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tfilename as string,\n\t\treferee as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_referees'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tfilename,\n\t\treferee = match_referees\n\t)) ~> sinksreferees\nFlatten1 sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tinput(\n\t\tstring1 as string,\n\t\tstring2 as string,\n\t\tstring3 as string,\n\t\tstring4 as string,\n\t\tstring5 as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_generic'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tstring1 = player,\n\t\tstring2 = filename\n\t)) ~> sink1"
+					"script": "source(output(\n\t\tmeta as (data_version as string, created as string, revision as integer),\n\t\tinfo as (balls_per_over as integer, city as string, dates as string[], event as (name as string, match_number as integer, group as string), gender as string, match_type as string, match_type_number as integer, officials as (match_referees as string[], reserve_umpires as string[], tv_umpires as string[], umpires as string[]), outcome as (winner as string, by as (wickets as integer)), overs as integer, player_of_match as string[], players as ({South Africa} as string[], Australia as string[]), registry as (people as ({A Nortje} as string, {A Zampa} as string, {AJ Finch} as string, {AK Markram} as string, {Ahsan Raza} as string, {D Pretorius} as string, {DA Miller} as string, {DA Warner} as string, {GJ Maxwell} as string, {H Klaasen} as string, {HE van der Dussen} as string, {J Srinath} as string, {JR Hazlewood} as string, {K Rabada} as string, {KA Maharaj} as string, {L Rusere} as string, {MA Gough} as string, {MA Starc} as string, {MP Stoinis} as string, {MR Marsh} as string, {MS Wade} as string, {Nitin Menon} as string, {PJ Cummins} as string, {Q de Kock} as string, {SPD Smith} as string, {T Bavuma} as string, {T Shamsi} as string)), season as string, team_type as string, teams as string[], toss as (decision as string, winner as string), venue as string),\n\t\tinnings as (team as string, overs as (over as integer, deliveries as (batter as string, bowler as string, non_striker as string, runs as (batter as integer, extras as integer, total as integer))[])[], powerplays as (from as double, to as double, type as string)[])[]\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinferDriftedColumnTypes: true,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'filename',\n\tdocumentForm: 'arrayOfDocuments',\n\tpartitionBy('hash', 1)) ~> cricsheet\ncricsheet foldDown(unroll(info.dates),\n\tmapColumn(\n\t\tdates = info.dates,\n\t\tfilename\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattendates\ncricsheet foldDown(unroll(info.teams),\n\tmapColumn(\n\t\tteam = info.teams,\n\t\tfilename\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattenteams\ncricsheet foldDown(unroll(info.officials.match_referees),\n\tmapColumn(\n\t\tfilename,\n\t\tmatch_referees = info.officials.match_referees\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattenreferees\ncricsheet foldDown(unroll(info.players.{South Africa}),\n\tmapColumn(\n\t\tplayer = info.players.{South Africa},\n\t\tfilename\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> flattenSA\ncricsheet foldDown(unroll((array(byName('info.players.{South Africa}')))),\n\tmapColumn(\n\t\tfilename,\n\t\tplayer = info.players.{South Africa}\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flattendynamic\nflattendates sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tfilename as string,\n\t\tmatch_date as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_dates'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tfilename,\n\t\tmatch_date = dates\n\t)) ~> sinksdates\nflattenteams sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tfilename as string,\n\t\tteam as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_teams'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tfilename,\n\t\tteam\n\t)) ~> sinksteams\ncricsheet sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tinput(\n\t\tvenue as string,\n\t\tevent_name as string,\n\t\tmatch_number as integer,\n\t\tmatch_date as date,\n\t\twinner as string,\n\t\ttoss_winner as string,\n\t\ttoss_decision as string,\n\t\tplayer_of_match as string,\n\t\tfilename as string,\n\t\tstage as string,\n\t\tmatch_group as string,\n\t\twinning_margin as string,\n\t\teliminator as string,\n\t\tmethod as string,\n\t\tresult as string,\n\t\tseason as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_matches'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tvenue = info.venue,\n\t\tevent_name = info.event.name,\n\t\tmatch_number = info.event.match_number,\n\t\twinner = info.outcome.winner,\n\t\ttoss_winner = info.toss.winner,\n\t\ttoss_decision = info.toss.decision,\n\t\tplayer_of_match = info.player_of_match,\n\t\tmatch_group = info.event.group,\n\t\tfilename,\n\t\tseason = info.season\n\t)) ~> sinkmatches\nflattenreferees sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tfilename as string,\n\t\treferee as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_referees'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tfilename,\n\t\treferee = match_referees\n\t)) ~> sinksreferees\nflattenSA sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tinput(\n\t\tstring1 as string,\n\t\tstring2 as string,\n\t\tstring3 as string,\n\t\tstring4 as string,\n\t\tstring5 as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_generic'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tstring1 = player,\n\t\tstring2 = filename\n\t)) ~> sink1\nFlattendynamic sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tstring1 as string,\n\t\tstring2 as string,\n\t\tstring3 as string,\n\t\tstring4 as string,\n\t\tstring5 as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_generic_2'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tstring1 = player,\n\t\tstring2 = filename\n\t)) ~> sink2"
 				}
 			},
 			"dependsOn": [
@@ -1013,7 +1609,42 @@
 				"[concat(variables('factoryId'), '/datasets/s_teams')]",
 				"[concat(variables('factoryId'), '/datasets/s_matches')]",
 				"[concat(variables('factoryId'), '/datasets/s_referees')]",
-				"[concat(variables('factoryId'), '/datasets/s_generic')]"
+				"[concat(variables('factoryId'), '/datasets/s_generic')]",
+				"[concat(variables('factoryId'), '/datasets/s_generic_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/customer')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CSR",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CustomerSource",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"script": "source(output(\n\t\tCustomerID as string,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource1 sink(allowSchemaDrift: false,\n\tvalidateSchema: false,\n\tinput(\n\t\tCustomerID as integer,\n\t\tTitle as string,\n\t\tFirstName as string,\n\t\tMiddleName as string,\n\t\tLastName as string,\n\t\tSuffix as string,\n\t\tCompanyName as string,\n\t\tSalesPerson as string,\n\t\tEmailAddress as string,\n\t\tPhone as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from CustomerSource'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID,\n\t\tTitle,\n\t\tFirstName,\n\t\tMiddleName,\n\t\tLastName,\n\t\tSuffix,\n\t\tCompanyName,\n\t\tSalesPerson,\n\t\tEmailAddress,\n\t\tPhone\n\t)) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CSR')]",
+				"[concat(variables('factoryId'), '/datasets/CustomerSource')]"
 			]
 		},
 		{
@@ -1051,101 +1682,37 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/s_referees')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/s_sales')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "filename",
-						"type": "varchar"
-					},
-					{
-						"name": "referee",
-						"type": "varchar"
-					}
-				],
+				"type": "MappingDataFlow",
 				"typeProperties": {
-					"schema": "dbo",
-					"table": "s_referees"
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Sales",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "s_sales",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"script": "source(output(\n\t\tDate as string,\n\t\tcompany as string,\n\t\temployee as string,\n\t\tSalaries as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDate as string,\n\t\tcompany as string,\n\t\temployee as string,\n\t\tSalaries as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpreSQLs:['delete from s_sales'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/s_generic')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "string1",
-						"type": "varchar"
-					},
-					{
-						"name": "string2",
-						"type": "varchar"
-					},
-					{
-						"name": "string3",
-						"type": "varchar"
-					},
-					{
-						"name": "string4",
-						"type": "varchar"
-					},
-					{
-						"name": "string5",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "s_generic"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "cricsheetinput"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('factoryId'), '/datasets/Sales')]",
+				"[concat(variables('factoryId'), '/datasets/s_sales')]"
 			]
 		}
 	]
