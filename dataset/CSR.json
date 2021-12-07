@@ -20,7 +20,19 @@
 		},
 		"schema": [
 			{
-				"name": "CustomerID|Title|FirstName|MiddleName",
+				"name": "CustomerID",
+				"type": "String"
+			},
+			{
+				"name": "Title",
+				"type": "String"
+			},
+			{
+				"name": "FirstName",
+				"type": "String"
+			},
+			{
+				"name": "MiddleName",
 				"type": "String"
 			}
 		]
