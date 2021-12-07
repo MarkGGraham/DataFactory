@@ -13,7 +13,7 @@
 				"fileName": "CSR_2.csv",
 				"container": "csv"
 			},
-			"columnDelimiter": "|",
+			"columnDelimiter": ",",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
