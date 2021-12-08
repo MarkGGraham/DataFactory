@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "customer",
+				"name": "UpdateCustomerDimension",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "customer",
+						"referenceName": "UpdateCustomerDimension",
 						"type": "DataFlowReference"
 					},
 					"compute": {
